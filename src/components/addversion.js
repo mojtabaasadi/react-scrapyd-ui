@@ -18,8 +18,17 @@ class AddVerion extends Component {
     upload(fieldName, file, metadata, load, error, progress, abort) {
         const formData = new FormData();
         formData.append(fieldName, file, file.name);
-        formData.append("project",this.state.data.project);
-        formData.append("version",this.state.data.version);
+        if (!('version' in this.state.data) || this.state.data.version == "") {
+            formData.append("version", Date.now());
+        } else {
+            formData.append("version", this.state.data.version);
+        }
+        
+        if (!('project' in this.state.data) || this.state.data.project == "") {
+            formData.append("project", file.name);
+        } else {
+            formData.append("project", this.state.data.project);
+        }
 
         const request = new XMLHttpRequest();
         request.open('POST', HOST+"/addversion.json");

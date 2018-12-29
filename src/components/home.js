@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Base from "./base"
-import { daemonStatus, listprojects, listversions, listspiders } from "../services/api"
+import { daemonStatus, listprojects, listversions, listspiders,deleteVersion } from "../services/api"
 import { ListGroup, ListGroupItem,Button } from 'reactstrap';
 import {Link} from "react-router-dom"
 
@@ -12,6 +12,7 @@ class Home extends Component {
     componentWillMount() {
         this.daemonStatus()
     }
+
     daemonStatus() {
         daemonStatus(this.state.host).then((status) => {
             // this.setState({ status: status })
@@ -34,6 +35,16 @@ class Home extends Component {
     righteee(text) {
         return <div style={{ float: "right" }} >{text}</div>
     }
+
+    remove(project,version){
+        deleteVersion(project,version).then((res)=>{
+            if(res.status==="ok"){
+                this.daemonStatus()
+            }
+        })
+    }
+    
+
     render() {
         let projects = []
         if (this.state.status.projects) {
@@ -66,7 +77,7 @@ class Home extends Component {
                                         </div>
                                         <div className="col-sm-4">
                                             {project.versions?"@" + project.versions[0]:""}
-                                        <Button color="danger"  size="xs" style={{fontSize:"20px",fontWeight:"bold",padding:"0",margin:5}}>-</Button>
+                                        <Button color="danger" onClick={()=>this.remove(project.name,project.versions[0])}  size="xs" style={{float:"right",padding: '1px 6px',fontWeight:"bold",margin:5}}>-</Button>
                                         </div>
                                     </div>
                                 </ListGroupItem>
