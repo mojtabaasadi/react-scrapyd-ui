@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Base from "./base"
-import { daemonStatus, listprojects, listversions, listspiders,deleteVersion } from "../services/api"
+import { daemonStatus, listprojects,listjobs, listversions, listspiders,deleteVersion
+,mergeJobs } from "../services/api"
 import { ListGroup, ListGroupItem,Button } from 'reactstrap';
 import {Link} from "react-router-dom"
 
@@ -27,7 +28,11 @@ class Home extends Component {
                         project.spiders = spiders
                         this.setState({ status: status })
                     })
-
+                    listjobs(project.name).then(({running,pending,finished})=>{
+                        let jobs = mergeJobs(running,pending,finished)
+                        project.jobs = jobs.length
+                        this.setState({ status: status })
+                    })
                 }
             })
         })
@@ -70,13 +75,16 @@ class Home extends Component {
                                 <ListGroupItem key={project.name} >
                                     <div className="row">
                                         <div className="col-sm-4">
-                                            {project.name}
+                                            {project.name} (<a href={"/"+project.name+"/jobs"}>{project.jobs} jobs</a>)
                                         </div>
                                         <div className="col-sm-4">
                                             {project.spiders?project.spiders.length+"spiders":''} 
                                         </div>
                                         <div className="col-sm-4">
                                             {project.versions?"@" + project.versions[0]:""}
+                                         <a href={'/schedule/'+project.name}>
+                                        <Button color="primary" size="xs" style={{float:"right",padding: '1px 6px',fontWeight:"bold",margin:5}}>
+                                          @</Button></a>
                                         <Button color="danger" onClick={()=>this.remove(project.name,project.versions[0])}  size="xs" style={{float:"right",padding: '1px 6px',fontWeight:"bold",margin:5}}>-</Button>
                                         </div>
                                     </div>

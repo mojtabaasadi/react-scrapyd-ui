@@ -5,14 +5,30 @@ import "toastr/build/toastr.css"
 export default class HHH {
 
 }
-function handelMessage(data){
-    if(data.status &&  data.status.search("error")>-1){
+
+export function urlize(obj){
+    var str = "";
+    for (var key in obj) {
+        if (str != "") {
+            str += "&";
+        }
+        str += key + "=" + encodeURIComponent(obj[key]);
+    }
+    return str
+}
+
+export function mergeJobs(running, pending, finished) {
+    return running.concat(pending).concat(finished)
+
+}
+function handelMessage(data) {
+    if (data.status && data.status.search("error") > -1) {
         toastr["error"](data.message)
     }
 }
 export const daemonStatus = () => {
     return new Promise((resolve, reject) => {
-        let req = fetch(HOST + '/daemonstatus.json').then(res => {
+        let req = fetch("http://" + HOST + '/daemonstatus.json').then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -25,7 +41,7 @@ export const daemonStatus = () => {
 }
 export const listprojects = () => {
     return new Promise((resolve, reject) => {
-        let req = fetch(HOST + '/listprojects.json').then(res => {
+        let req = fetch("http://" + HOST + '/listprojects.json').then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -38,7 +54,7 @@ export const listprojects = () => {
 }
 export const listversions = (project) => {
     return new Promise((resolve, reject) => {
-        let req = fetch(HOST + '/listversions.json?project=' + project).then(res => {
+        let req = fetch("http://" + HOST + '/listversions.json?project=' + project).then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -51,7 +67,7 @@ export const listversions = (project) => {
 }
 export const listspiders = (project) => {
     return new Promise((resolve, reject) => {
-        let req = fetch(HOST + '/listspiders.json?project=' + project).then(res => {
+        let req = fetch("http://" + HOST + '/listspiders.json?project=' + project).then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -63,25 +79,78 @@ export const listspiders = (project) => {
     })
 }
 
-export const deleteVersion = (project, version) => {
-    let body = new FormData()
-    body.append("project",project)
-    body.append("version",version)
+export const listjobs = (project) => {
     return new Promise((resolve, reject) => {
-        let req = fetch( HOST + '/delversion.json',{
+        let req = fetch("http://" + HOST + '/listjobs.json?project=' + project).then(res => {
+            return res.json()
+        }).then(data => {
+            handelMessage(data)
+            return resolve(data)
+        }).catch((err) => {
+            toastr['error']('listjobs fail')
+            return reject(err)
+        })
+    })
+}
+export const jobDetail = (project,spider,job) => {
+    return new Promise((resolve, reject) => {
+        let req = fetch("http://" + HOST + '/jobstatus.json?' + urlize(
+        {"project":project,
+        spider:spider,
+        job:job})
+        ).then(res => {
+            return res.json()
+        }).then(data => {
+            handelMessage(data)
+            return resolve(data)
+        }).catch((err) => {
+            toastr['error']('jobDetail fail')
+            return reject(err)
+        })
+    })
+}
+
+export const schedule = (form) => {
+    console.log(form)
+    let body = new FormData()
+    for (let key in form) {
+        if (form[key] !== null) {
+            body.append(key, form[key])
+
+        }
+    }
+    return new Promise((resolve, reject) => {
+        let req = fetch("http://" + HOST + '/schedule.json', {
             method: "POST",
-            body: body,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            }
+            body: body
         }).then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
             return resolve(data)
         }).catch((err) => {
-            toastr['error']('listspiders fail')
+            toastr['error']('schedule fail')
             return reject(err)
         })
+    })
+}
+
+export const deleteVersion = (project, version) => {
+    let body = new FormData()
+    body.append("project", project)
+    body.append("version", version)
+    return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open('POST', "http://" + HOST + "/delversion.json");
+        request.onload = function () {
+            handelMessage(JSON.parse(request.responseText))
+            if (request.status >= 200 && request.status < 300) {
+                resolve(JSON.parse(request.responseText));
+            }
+            else {
+                reject(JSON.parse(request.responseText));
+            }
+        }
+        request.send(body);
     })
 }

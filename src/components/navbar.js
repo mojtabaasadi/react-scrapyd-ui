@@ -14,18 +14,24 @@ import {
 	DropdownMenu,
 	DropdownItem
 } from 'reactstrap';
+import HostModal from "./hostmodal"
 
 export default class NavBar extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.toggle = this.toggle.bind(this);
 		this.state = {
 			isOpen: false,
+			hostModal: false
 		};
 
 	}
 
+	toggleHostmodal() {
+		this.setState({
+			hostModal: !this.state.hostModal
+		})
+	}
 
 	toggle() {
 		this.setState({
@@ -44,29 +50,24 @@ export default class NavBar extends React.Component {
 						<Collapse isOpen={this.state.isOpen} navbar>
 							<Nav className="ml-auto" navbar>
 								<NavItem>
-									<NavLink href="https://github.com/reactstrap/reactstrap">GitHub{!this.state.isNewHostValid}</NavLink>
+									<NavLink href="https://github.com/mojtabaasadi/react-scrapyd-ui">GitHub{!this.state.isNewHostValid}</NavLink>
 								</NavItem>
 								<UncontrolledDropdown nav inNavbar>
 									<DropdownToggle nav caret>
-										Options
+										Settings
                 </DropdownToggle>
 									<DropdownMenu right>
-										<DropdownItem>
-											Option 1
+										<DropdownItem onClick={() => this.toggleHostmodal()}>
+											change host
                   </DropdownItem>
-										<DropdownItem>
-											Option 2
-                  </DropdownItem>
-										<DropdownItem divider />
-										<DropdownItem>
-											Reset
-                  </DropdownItem>
+
 									</DropdownMenu>
 								</UncontrolledDropdown>
 							</Nav>
 						</Collapse>
 					</div>
 				</Navbar>
+				<HostModal isOpen={this.state.hostModal} title={'change host'} toggle={this.toggleHostmodal.bind(this)}></HostModal>
 			</div>
 		);
 	}
