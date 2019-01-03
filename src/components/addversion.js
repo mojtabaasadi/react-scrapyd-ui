@@ -31,7 +31,7 @@ class AddVerion extends Component {
         }
 
         const request = new XMLHttpRequest();
-        request.open('POST', HOST+"/addversion.json");
+        request.open('POST','http://'+HOST +"/addversion.json");
 
         // Should call the progress method to update the progress to 100% before calling load
         // Setting computable to false switches the loading indicator to infinite mode
@@ -39,9 +39,6 @@ class AddVerion extends Component {
             progress(e.lengthComputable, e.loaded, e.total);
         };
 
-        // Should call the load method when done and pass the returned server file id
-        // this server file id is then used later on when reverting or restoring a file
-        // so your server knows which file to return without exposing that info to the client
         request.onload = function() {
             if (request.status >= 200 && request.status < 300) {
                 if( JSON.parse(request.responseText).status=="ok"){
@@ -50,7 +47,7 @@ class AddVerion extends Component {
                 load(request.responseText);
             }
             else {
-                // Can call the error method if something is wrong, should exit after
+
                 error('oh no');
             }
         };
@@ -98,7 +95,7 @@ class AddVerion extends Component {
                     <Label >Egg file:</Label>
                     <span style={style}>{this.errors.egg}</span>
                     <FilePond
-                        server={{url:HOST + "/addversion.json",
+                        server={{url:'http://'+HOST + "/addversion.json",
                         process:this.upload.bind(this),
                         }}
                         ref={ref => this.pond = ref}
@@ -115,9 +112,7 @@ class AddVerion extends Component {
                         }
                         instantUpload={false}
                         files={this.state.files}
-                        name="egg"
-                    >
-
+                        name="egg" >
                         {this.state.files.map(file => (
                             <File key={file} src={file} origin="local" />
                         ))}

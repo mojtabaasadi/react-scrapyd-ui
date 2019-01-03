@@ -16,7 +16,7 @@ class Home extends Component {
 
     daemonStatus() {
         daemonStatus(this.state.host).then((status) => {
-            // this.setState({ status: status })
+            this.setState({ status: status })
             listprojects(this.state.host).then(({ projects }) => {
                 status.projects = projects.map((p, i) => { return { name: p, spiders: [] } })
                 for (let project of status.projects) {

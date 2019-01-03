@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Base from "./base"
 import { listversions, listspiders, listjobs,schedule } from "../services/api"
 import { Form, Row, Col, FormGroup, Button, Input, InputGroup, Label } from 'reactstrap';
+import * as toastr from "toastr"
+
 
 class Schedule extends Component {
     constructor(props) {
@@ -128,8 +130,10 @@ class Schedule extends Component {
                         <Row form>
                             <Button onClick={()=>{
                                 schedule(this.state.data).then((res)=>{
-                                    console.log(res)
-                                    window.location = "/"+this.state.data.project+"/"+this.state.data.spider+"/"+res.jobid
+                                    if (res.status=="ok"){
+                                        toastr["success"](res.message)
+                                    }
+                                    window.location = "/"+this.state.data.project+"/jobs"
                                 })
                             }} color="primary" >Create Job</Button>
                         </Row>

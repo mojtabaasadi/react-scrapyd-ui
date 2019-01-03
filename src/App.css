@@ -7,68 +7,10 @@
 	height: 40vmin;
 }
 
-pre {
-	background-attachment: scroll;
-	background-clip: border-box;
-	background-color: rgb(39, 40, 34);
-	background-image: none;
-	background-origin: padding-box;
-	background-position-x: 0%;
-	background-position-y: 0%;
-	background-size: auto;
-	border-bottom-color: rgb(216, 216, 216);
-	border-bottom-left-radius: 0px;
-	border-bottom-right-radius: 0px;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-image-outset: 0px;
-	border-image-repeat: stretch;
-	border-image-slice: 100%;
-	border-image-source: none;
-	border-image-width: 1;
-	border-left-color: rgb(216, 216, 216);
-	border-left-style: solid;
-	border-left-width: 1px;
-	border-right-color: rgb(216, 216, 216);
-	border-right-style: solid;
-	border-right-width: 1px;
-	border-top-color: rgb(248, 248, 242);
-	border-top-left-radius: 0px;
-	border-top-right-radius: 0px;
-	border-top-style: none;
-	border-top-width: 0px;
-	box-sizing: border-box;
-	clear: both;
-	color: rgb(248, 248, 242);
-	display: block;
-	font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-	font-size: 14px;
-	font-weight: 400;
-	height: 970px;
-	hyphens: none;
-	line-height: 21px;
-	margin-bottom: 21px;
-	margin-left: 0px;
-	margin-right: 0px;
-	margin-top: 0px;
-	overflow-wrap: normal;
-	overflow-x: auto;
-	overflow-y: auto;
-	padding-bottom: 14px;
-	padding-left: 14px;
-	padding-right: 14px;
-	padding-top: 14px;
-	tab-size: 4;
-	text-align: left;
-	text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 0px;
-	text-size-adjust: 100%;
-	white-space: pre;
-	width: 510px;
-	word-break: normal;
-	word-spacing: 0px;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+.card-body{
+	padding-top: 0;
+	padding-bottom: 0;
 }
-
 .blink {
 	width: 10px;
 	height: 10px;

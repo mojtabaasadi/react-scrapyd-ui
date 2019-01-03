@@ -7,6 +7,11 @@ let col_style ={
     "padding": "10px 0 10px 16px",
     "fontSize":"0.7rem"
 }
+const stat_style = {
+    background:"#272822",
+    color:"lightgray",
+    padding:"0 25px"
+}
 class Jobs extends Component {
     constructor(props) {
         super(props)
@@ -36,7 +41,7 @@ class Jobs extends Component {
                 <div className="container">
                     <h6>Pending:</h6>
                     <Card>
-                                <Card>
+                                <CardBody>
                                 <Row>
                                     <Col xs="3"></Col>
                                     <Col xs="2"></Col>
@@ -47,7 +52,7 @@ class Jobs extends Component {
                                 {this.state.jobs.pending && this.state.jobs.pending.length ?
                                     this.state.jobs.pending.map((job) => {
                                             return <Row key={job.id}>
-                                                <Col xs="3" style={col_style}>{new Date(job.start_time).toLocaleString()}</Col>
+                                                <Col xs="3" style={col_style}>{job.project}</Col>
                                                 <Col xs="2" style={col_style}>{job.spider}</Col>
                                                 <Col xs="3" style={col_style}>{job.detail?job.detail['item_scraped_count']+" items":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
@@ -56,12 +61,12 @@ class Jobs extends Component {
                                                 </Col>
                                             </Row>
                                         })
-                                        : ''}
-                            </Card>
+                                        : 'nothing pending'}
+                            </CardBody>
                         </Card>
                     <h6>Running:</h6>
                     <Card>
-                                <Card>
+                                <CardBody>
                                 <Row>
                                     <Col xs="3"></Col>
                                     <Col xs="2"></Col>
@@ -81,12 +86,12 @@ class Jobs extends Component {
                                                 </Col>
                                             </Row>
                                         })
-                                        : ''}
-                            </Card>
+                                        : 'nothing running'}
+                            </CardBody>
                         </Card>
                     <h6>Finished:</h6>
                     <Card>
-                                <Card>
+                                <CardBody>
                                 <Row>
                                     <Col xs="3"></Col>
                                     <Col xs="2"></Col>
@@ -105,16 +110,15 @@ class Jobs extends Component {
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['finish_reason']:""}
                                                 <a href={'/'+this.state.project+"/"+job.spider+"/"+job.id}>&nbsp;logs</a>
                                                 </Col>
-                                                <Col xs="12" style={{padding:"0 25px"}}>
+                                                <Col xs="12" style={stat_style}>
                                                 {job.showDetail?job.details.map((key)=>{
                                                     return <p key={key} style={{fontSize:"x-small",margin:0}}>{key}:{job.detail[key]}</p>
                                                 }):""}
                                                 </Col>
                                             </Row>
                                         })
-                                        
                                         : ''}
-                            </Card>
+                            </CardBody>
                         </Card>
 
                 </div >
