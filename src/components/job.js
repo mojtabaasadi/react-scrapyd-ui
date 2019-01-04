@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Base from "./base"
 import { HOST } from "../services/settings";
-import { urlize } from "../services/api"
+import { urlize,pickprotocol } from "../services/api"
 import ServerLogEvent from "../services/sse"
 
 class Job extends Component {
@@ -14,26 +14,40 @@ class Job extends Component {
             log : ""
 
         }
-        let ssurl = "http://" + HOST + "/live?" + urlize(this.state)
+        if(window.location.href.search("finished=true")>-1){
+            fetch(pickprotocol(HOST)+"/logs/"+this.state.project+"/"+this.state.spider+"/"+this.state.job+".log").then((e)=>{
+                return e.text()
+                // this.setState({log:e.body})
+            }).then((text)=>{
+                this.setState({log:text})
+            })
+        }else{
 
-        this.sse = new EventSource(ssurl)
-        this.sse.onerror = (event)=>{
-            if(event.type=="error" && event.eventPhase == EventSource.CLOSED){
-                this.sse.close()
-            }
-            console.log(event)
+            this.log = ""
+            let ssurl = "http://" + HOST + "/livelog?" + urlize(this.state)
+            
+            this.sse = new EventSource(ssurl)
+            this.sse.onmessage = this.parseMessage.bind(this)
+            this.sse.onerror = this.parseError.bind(this)
         }
-        this.sse.onmessage = (e)=>{
-            this.setState({log:this.state.log+'\n'+e.data})
         }
-
+        
+        parseError(event){
+        if(event.eventPhase == EventSource.CLOSED){
+            this.sse.close()
+        }
     }
-    // componentDidMount() {
-    //     setTimeout(() => {
-    //         this.socket.send("")
-    //     }, 2000)
-    // }
-
+    parseMessage(event){
+        this.log += "\n" + event.data
+        let logElem = document.querySelector("#log")
+        if(this.log.length>=1000 || this.sse.CLOSED ){
+            this.setState({log:this.state.log+this.log})
+            this.log = ""
+            if( logElem !== undefined){
+                logElem.scrollTo(0,logElem.scrollHeight)
+            }
+        }
+    }
     render() {
 
         return (

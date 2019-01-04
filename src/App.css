@@ -59,3 +59,11 @@
 		transform: rotate(360deg);
 	}
 }
+.job_status{
+	background: rgb(31, 51, 19);
+    color: whitesmoke;
+    padding: 0px 25px;
+}
+.jobs{
+	margin-bottom: 2rem;
+}

@@ -6,13 +6,18 @@ export default class HHH {
 
 }
 
+export function pickprotocol(host){
+    return host === "" ? host :  window.location.protocol + "//" + host
+}
 export function urlize(obj){
     var str = "";
     for (var key in obj) {
         if (str != "") {
             str += "&";
         }
-        str += key + "=" + encodeURIComponent(obj[key]);
+        if(typeof(obj[key])!== undefined){
+            str += key + "=" + encodeURIComponent(obj[key]);
+        }
     }
     return str
 }
@@ -28,7 +33,7 @@ function handelMessage(data) {
 }
 export const daemonStatus = () => {
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/daemonstatus.json').then(res => {
+        let req = fetch(pickprotocol(HOST) + '/daemonstatus.json').then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -41,7 +46,7 @@ export const daemonStatus = () => {
 }
 export const listprojects = () => {
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/listprojects.json').then(res => {
+        let req = fetch(pickprotocol(HOST) + '/listprojects.json').then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -54,7 +59,7 @@ export const listprojects = () => {
 }
 export const listversions = (project) => {
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/listversions.json?project=' + project).then(res => {
+        let req = fetch(pickprotocol(HOST) + '/listversions.json?project=' + project).then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -67,7 +72,7 @@ export const listversions = (project) => {
 }
 export const listspiders = (project) => {
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/listspiders.json?project=' + project).then(res => {
+        let req = fetch(pickprotocol(HOST) + '/listspiders.json?project=' + project).then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -81,7 +86,7 @@ export const listspiders = (project) => {
 
 export const listjobs = (project) => {
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/listjobs.json?project=' + project).then(res => {
+        let req = fetch(pickprotocol(HOST) + '/listjobs.json?project=' + project).then(res => {
             return res.json()
         }).then(data => {
             handelMessage(data)
@@ -94,7 +99,7 @@ export const listjobs = (project) => {
 }
 export const jobDetail = (project,spider,job) => {
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/jobstatus.json?' + urlize(
+        let req = fetch(pickprotocol(HOST) + '/jobstatus.json?' + urlize(
         {"project":project,
         spider:spider,
         job:job})
@@ -114,13 +119,12 @@ export const schedule = (form) => {
     console.log(form)
     let body = new FormData()
     for (let key in form) {
-        if (form[key] !== null) {
+        if (form[key] !== null && typeof(form[key])) {
             body.append(key, form[key])
-
         }
     }
     return new Promise((resolve, reject) => {
-        let req = fetch("http://" + HOST + '/schedule.json', {
+        let req = fetch(pickprotocol(HOST) + '/schedule.json', {
             method: "POST",
             body: body
         }).then(res => {
@@ -141,7 +145,7 @@ export const deleteVersion = (project, version) => {
     body.append("version", version)
     return new Promise((resolve, reject) => {
         let request = new XMLHttpRequest();
-        request.open('POST', "http://" + HOST + "/delversion.json");
+        request.open('POST', pickprotocol(HOST) + "/delversion.json");
         request.onload = function () {
             handelMessage(JSON.parse(request.responseText))
             if (request.status >= 200 && request.status < 300) {

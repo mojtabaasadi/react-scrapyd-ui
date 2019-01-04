@@ -5,7 +5,7 @@ import AddVersion from "./components/addversion"
 import Schedule from "./components/schedule"
 import Jobs from "./components/jobs"
 import Job from "./components/job"
-require("prismjs/prism.js")
+import "./App.css"
 
 class App extends Component {
 	

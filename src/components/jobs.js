@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import Base from "./base"
 import { listjobs, jobDetail } from "../services/api"
-import { Form, Table, Row, Col, Card, CardBody } from 'reactstrap';
+import {  Row, Col, Card, CardBody } from 'reactstrap';
+import {logStatuses} from "../services/helpers"
 
 let col_style ={
     "padding": "10px 0 10px 16px",
     "fontSize":"0.7rem"
 }
 const stat_style = {
-    background:"#272822",
-    color:"lightgray",
-    padding:"0 25px"
+    background: 'rgb(31, 51, 19)',
+    color: 'whitesmoke',
+    padding: '0 25px',
 }
 class Jobs extends Component {
     constructor(props) {
@@ -21,7 +22,6 @@ class Jobs extends Component {
         listjobs(this.state.project).then((jobs) => {
             jobs.finished.map((job) => {
                 jobDetail(this.state.project, job.spider, job.id).then((det) => {
-                    console.log(det)
                     job.detail = det
                     job.details = Object.keys(det)
                     this.setState({ jobs: jobs })
@@ -40,7 +40,7 @@ class Jobs extends Component {
                 <Base />
                 <div className="container">
                     <h6>Pending:</h6>
-                    <Card>
+                    <Card  className={"jobs"}>
                                 <CardBody>
                                 <Row>
                                     <Col xs="3"></Col>
@@ -65,7 +65,7 @@ class Jobs extends Component {
                             </CardBody>
                         </Card>
                     <h6>Running:</h6>
-                    <Card>
+                    <Card  className={"jobs"}>
                                 <CardBody>
                                 <Row>
                                     <Col xs="3"></Col>
@@ -90,7 +90,7 @@ class Jobs extends Component {
                             </CardBody>
                         </Card>
                     <h6>Finished:</h6>
-                    <Card>
+                    <Card  className={"jobs"}>
                                 <CardBody>
                                 <Row>
                                     <Col xs="3"></Col>
@@ -100,19 +100,23 @@ class Jobs extends Component {
                                     <Col xs="2"></Col>
                                 </Row>
                                 {this.state.jobs.finished && this.state.jobs.finished.length ? this.state.jobs.finished.map((job) => {
-                                    return <Row key={job.id} onClick={()=>{
+                                    let onClick = ()=>{
                                         job.showDetail=job.detail &&!job.showDetail
-                                    this.setState({jobs:this.state.jobs})}} style={{cursor:"pointer"}}>
-                                                <Col xs="3" style={col_style}>{new Date(job.start_time).toLocaleString()}</Col>
-                                                <Col xs="2" style={col_style}>{job.spider}</Col>
-                                                <Col xs="3" style={col_style}>{job.detail&&'item_scraped_count' in job.detail?job.detail['item_scraped_count']+" items":""}</Col>
-                                                <Col xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
-                                                <Col xs="2" style={col_style}>{job.detail?job.detail['finish_reason']:""}
-                                                <a href={'/'+this.state.project+"/"+job.spider+"/"+job.id}>&nbsp;logs</a>
+                                    this.setState({jobs:this.state.jobs})}
+                                    return <Row key={job.id}  style={{cursor:"pointer"}}>
+                                                <Col onClick={onClick} xs="3" style={col_style}>{new Date(job.start_time).toLocaleString()}</Col>
+                                                <Col onClick={onClick} xs="2" style={col_style}>{job.spider}</Col>
+                                                <Col onClick={onClick} xs="3" style={col_style}>{job.detail&&'item_scraped_count' in job.detail?job.detail['item_scraped_count']+" items":""}</Col>
+                                                <Col onClick={onClick} xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
+                                                <Col  xs="2" style={col_style}>{job.detail?job.detail['finish_reason']:""}
+                                                <a href={'/'+this.state.project+"/"+job.spider+"/"+job.id+"?finished=true"}>&nbsp;logs</a>
                                                 </Col>
-                                                <Col xs="12" style={stat_style}>
+                                                <Col xs="12" className={"job_status"} >
                                                 {job.showDetail?job.details.map((key)=>{
-                                                    return <p key={key} style={{fontSize:"x-small",margin:0}}>{key}:{job.detail[key]}</p>
+                                                    return <p key={key} style={{fontSize:"x-small",margin:0}}>
+                                                        {logStatuses(key)}:<span style={{float:"right"}}>
+                                                        {job.detail[key]}</span>
+                                                        </p>
                                                 }):""}
                                                 </Col>
                                             </Row>

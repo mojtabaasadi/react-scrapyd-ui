@@ -3,8 +3,9 @@ import Base from "./base"
 import { HOST } from "../services/settings"
 import { FilePond, File, registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
-import { InputGroup, InputGroupAddon, InputGroupText, Input, Label } from 'reactstrap';
-import { listprojects } from "../services/api"
+import { InputGroup, Input, Label } from 'reactstrap';
+import { listprojects ,pickprotocol } from "../services/api"
+
 class AddVerion extends Component {
     constructor(props) {
         super(props)
@@ -17,7 +18,7 @@ class AddVerion extends Component {
     }
     upload(fieldName, file, metadata, load, error, progress, abort) {
         const formData = new FormData();
-        formData.append(fieldName, file, file.name);
+        formData.append(fieldName.split(".")[0], file, file.name);
         if (!('version' in this.state.data) || this.state.data.version == "") {
             formData.append("version", Date.now());
         } else {
@@ -31,7 +32,7 @@ class AddVerion extends Component {
         }
 
         const request = new XMLHttpRequest();
-        request.open('POST','http://'+HOST +"/addversion.json");
+        request.open('POST',pickprotocol(HOST) +"/addversion.json");
 
         // Should call the progress method to update the progress to 100% before calling load
         // Setting computable to false switches the loading indicator to infinite mode
@@ -95,7 +96,7 @@ class AddVerion extends Component {
                     <Label >Egg file:</Label>
                     <span style={style}>{this.errors.egg}</span>
                     <FilePond
-                        server={{url:'http://'+HOST + "/addversion.json",
+                        server={{url:pickprotocol(HOST) + "/addversion.json",
                         process:this.upload.bind(this),
                         }}
                         ref={ref => this.pond = ref}

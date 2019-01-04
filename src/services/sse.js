@@ -1,19 +1,18 @@
 export default class ServerLogEvent extends EventSource{
-    constructor(props){
+    constructor(props,listener){
         super(props)
-        console.log(props)
-    }
-    onmessage(e){
-        console.log(e)
-    }
-    
-    onerror(event){
-        if(event.eventPhase == EventSource.CLOSED){
-            this.close()
+        this.onerror = (event)=>{
+            if(event.eventPhase == EventSource.CLOSED){
+                this.close()
+            }
+            console.log(event)
         }
-        console.log(event)
-    }
-    onopen(e){
-        console.log(e)
+        // this.onmessage = (e)=>{
+        //     console.log(e)
+        // }
+        // this.onopen = (e)=>{
+        //     console.log(e)
+        // }
+        this.addEventListener("message",listener)
     }
 }
