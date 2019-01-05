@@ -19,20 +19,20 @@ class Schedule extends Component {
         }
         listspiders(this.state.data.project).then(({ spiders }) => {
             this.setState({ spiders: spiders })
-            if (spiders.length == 1) {
+            if (spiders.length === 1) {
                 this.updateData("spider", spiders[0])
             }
         })
         listversions(this.state.data.project).then(({ versions }) => {
             this.setState({ versions: versions })
-            if (versions.length == 1) {
+            if (versions.length === 1) {
                 this.updateData("_version", versions[0])
             }
         })
         listjobs(this.state.data.project).then(({ running, pending, finished }) => {
             let jobs = [].concat(running).concat(pending).concat(finished)
             this.setState({ jobs: jobs })
-            if (jobs.length == 1) {
+            if (jobs.length === 1) {
                 this.updateData("jobid", jobs[0])
             }
         })

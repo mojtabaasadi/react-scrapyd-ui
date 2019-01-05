@@ -158,3 +158,14 @@ export const deleteVersion = (project, version) => {
         request.send(body);
     })
 }
+
+export function logger(project,spider,log){
+    return new Promise((resolve, reject) => {
+        fetch( pickprotocol(HOST) + "/logs/"+ project+"/"+spider+"/"+log+".log")
+        .then((res)=>{return res.text()}).then((res)=>{
+            resolve(res)
+        }).catch((err)=>{
+            reject(err)
+        })
+    })
+}

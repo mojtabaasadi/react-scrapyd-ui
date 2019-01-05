@@ -59,6 +59,30 @@
 		transform: rotate(360deg);
 	}
 }
+.log-event .time{
+	color: #deef02
+}
+.log-event .from{
+	color: #5fd2d2;
+}
+.log-event .type{
+	color: #e4ac42;
+}
+.log-event.ERROR{
+	color: red!important
+	}
+.log-data{
+	background: rgba(0, 0, 0, 0.4);
+	padding: 0.4rem;
+	border-radius: 0.4rem;
+}
+.job_status p,.job_status *{
+	color: whitesmoke;
+	margin:0;
+}
+.clickable{
+	cursor: pointer;
+}
 .job_status{
 	background: rgb(31, 51, 19);
     color: whitesmoke;

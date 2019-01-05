@@ -117,7 +117,7 @@ class Jobs extends Component {
                                                         {logStatuses(key)}:<span style={{float:"right"}}>
                                                         {job.detail[key]}</span>
                                                         </p>
-                                                }):""}
+                                                }):<a href={"/"+this.state.project+"/schedule"}></a>   }
                                                 </Col>
                                             </Row>
                                         })

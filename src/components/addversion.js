@@ -19,13 +19,13 @@ class AddVerion extends Component {
     upload(fieldName, file, metadata, load, error, progress, abort) {
         const formData = new FormData();
         formData.append(fieldName.split(".")[0], file, file.name);
-        if (!('version' in this.state.data) || this.state.data.version == "") {
+        if (!('version' in this.state.data) || this.state.data.version === "") {
             formData.append("version", Date.now());
         } else {
             formData.append("version", this.state.data.version);
         }
         
-        if (!('project' in this.state.data) || this.state.data.project == "") {
+        if (!('project' in this.state.data) || this.state.data.project === "") {
             formData.append("project", file.name);
         } else {
             formData.append("project", this.state.data.project);
@@ -71,7 +71,7 @@ class AddVerion extends Component {
         if (this.state.data.egg != null) {
             this.state.data.egg.setMetadata(key, value)
         }
-        if (key == "project" && this.projects.includes(value)) {
+        if (key === "project" && this.projects.includes(value)) {
             this.setState({ error: { project: "project already exists" } })
         }
         this.setState({is_valid:this.state.data.egg != null && this.state.data.project.length > 0 && this.state.data.version.length > 0})
