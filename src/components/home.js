@@ -68,21 +68,21 @@ class Home extends Component {
 
                     <ListGroup style={{ marginTop: "10px" }}>
                         <ListGroupItem active >projects{this.righteee(
-                            <Link to="/addversion" style={{color:"white",fontSize:"20px",fontWeight:"bold"}}>+</Link>
+                            <Link to="/ui/addversion" style={{color:"white",fontSize:"20px",fontWeight:"bold"}}>+</Link>
                             )}</ListGroupItem>
                         {projects.map((project) => {
                             return (
                                 <ListGroupItem key={project.name} >
                                     <div className="row">
                                         <div className="col-sm-4">
-                                            {project.name} (<a href={"/"+project.name+"/jobs"}>{project.jobs} jobs</a>)
+                                            {project.name} (<a href={"/ui/"+project.name+"/jobs"}>{project.jobs} jobs</a>)
                                         </div>
                                         <div className="col-sm-4">
                                             {project.spiders?project.spiders.length+"spiders":''} 
                                         </div>
                                         <div className="col-sm-4">
                                             {project.versions?"@" + project.versions[0]:""}
-                                         <a href={'/schedule/'+project.name}>
+                                         <a href={'/ui/schedule/'+project.name}>
                                         <Button color="primary" size="xs" style={{float:"right",padding: '1px 6px',fontWeight:"bold",margin:5}}>
                                           @</Button></a>
                                         <Button color="danger" onClick={()=>this.remove(project.name,project.versions[0])}  size="xs" style={{float:"right",padding: '1px 6px',fontWeight:"bold",margin:5}}>-</Button>

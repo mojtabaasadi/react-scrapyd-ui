@@ -1,5 +1,6 @@
 import { Promise } from "q";
 import { HOST } from "./settings";
+import Logger from "./logger"
 import * as toastr from "toastr"
 import "toastr/build/toastr.css"
 export default class HHH {
@@ -99,16 +100,18 @@ export const listjobs = (project) => {
 }
 export const jobDetail = (project,spider,job) => {
     return new Promise((resolve, reject) => {
-        let req = fetch(pickprotocol(HOST) + '/jobstatus.json?' + urlize(
-        {"project":project,
-        spider:spider,
-        job:job})
+        let req = fetch(pickprotocol(HOST) + '/logs/' +project+"/"
+        +spider+"/"+job+".log"
         ).then(res => {
-            return res.json()
+            return res.text()
         }).then(data => {
-            handelMessage(data)
-            return resolve(data)
+            let log = new Logger(data)
+            let keys = Object.keys(log.dataEvents).filter((key)=>{
+                return log.dataEvents[key].length === 1
+            })
+            resolve(log.dataEvents[keys[keys.length-1]][0].data)
         }).catch((err) => {
+            console.log(err)
             toastr['error']('jobDetail fail')
             return reject(err)
         })

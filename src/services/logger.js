@@ -1,6 +1,7 @@
-const eventRegex = /(?:\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} .*|^(?:\{|\[).*(?:[\s\S]*?)(?:'|\})(?:\}|\]))/gm;
+const eventRegex = /(?:\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} .*|^(:?\[(:?'|").*(?:[\s\S]*?)(:?'|")\]|\{.*(?:[\s\S]*?)\}))/gm;
 const logRegex = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} .*/gm;
-const dataRegex = /^(?:\{|\[).*(?:[\s\S]*?)(?:'|\})(?:\}|\])$/gm
+const dataRegex = /^(:?\[(:?'|").*(?:[\s\S]*?)(:?'|")\]|\{.*(?:[\s\S]*?)\})$/gm
+const datetimeRegex = /datetime.datetime\(((:?\d{1,6}(:?, |)){7})\)/gm;
 
 function makeHash(string) {
     var hash = 0, i, chr;
@@ -11,7 +12,21 @@ function makeHash(string) {
         hash |= 0; // Convert to 32bit integer
     }
     return Math.abs(hash);
-};
+}
+function parseDatetime(date_string) {
+    let dtregex = new RegExp(datetimeRegex)
+    let m;
+
+    while ((m = dtregex.exec(date_string)) !== null) {
+        date_string = date_string.slice(0, dtregex.lastIndex - m[0].length) +
+            ('"' + m[1] + '"') +
+            date_string.slice(dtregex.lastIndex, date_string.length)
+        if (m.index === dtregex.lastIndex) {
+            dtregex.lastIndex++;
+        }
+    }
+    return date_string
+}
 
 export class LogEvent {
     regex = /(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(.*)\] (\w*):/gm;
@@ -35,12 +50,15 @@ export class LogEvent {
 
 }
 
-class DataEvent {
+export class DataEvent {
     isOpen = false
     constructor(string) {
-        this._raw = string.split("'").join('"').replace(/\n/gm,'').replace(/"\s+"/gm,'')
+        this._raw = string.split("'").join('"').replace(/\n/gm, '').replace(/"\s+"/gm, '')
+        if (datetimeRegex.test(this._raw)) {
+            this._raw = parseDatetime(this._raw)
+        }
         this.data = JSON.parse(this._raw)
-        
+
     }
 
 }
@@ -49,12 +67,13 @@ export default class Logger {
     logEvents = []
     dataEvents = new Object()
     _iter = []
-    
+
     constructor(logText) {
         this._log = logText
         this.parseLog()
+        
     }
-    
+
     get iter() {
         return this._iter.map((event) => {
             if (event.type === "data") {
@@ -65,58 +84,48 @@ export default class Logger {
             }
         })
     }
+    get isFinished(){
+        return this.logEvents[this.logEvents.length-1].text.search(" Spider closed ") > -1
+    }
     parseLog() {
         const str = this._log;
         let m;
-        
+
         while ((m = eventRegex.exec(str)) !== null) {
             // This is necessary to avoid infinite loops with zero-width matches
             if (m.index === eventRegex.lastIndex) {
                 eventRegex.lastIndex++;
             }
-            
-            // The result can be accessed through the `m`-variable.
-            m.forEach((match, groupIndex) => {
-                
-                let event_type = dataRegex.test(match) && !logRegex.test(match)  ? "data" : "log"
-                let ind = 0        
-                if (event_type === "data") {
-                    ind = this.matchDataEvent(new DataEvent(match))
-                }
-                else {
-                    this.logEvents.push(new LogEvent(match))
-                    ind = this.logEvents.length - 1
-                }
-                this._iter.push({ type: event_type, index: ind })
-            });
+            let match = m[0]
 
+            // The result can be accessed through the `m`-variable.
+            // m.forEach((match, groupIndex) => {
+            let event_type = dataRegex.test(match) && !logRegex.test(match) ? "data" : "log"
+            let ind = 0
+            if (event_type === "data") {
+                ind = this.matchDataEvent(new DataEvent(match))
+            }
+            else {
+                this.logEvents.push(new LogEvent(match))
+                ind = this.logEvents.length - 1
+            }
+            this._iter.push({ type: event_type, index: ind })
         }
     }
-    parseLogw() {
-        const eventRegex = /(?:\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} .*|^(?:\{|\[).*(?:[\s\S]*?)(?:\}|\]))/gm;
-        let text = this._log
-        let matches = eventRegex.exec(text)
-        while (matches !== null) {
-            matches.forEach((match, groupIndex) => {
-                text = text.replace(match, '')
-            });
-            matches = eventRegex.exec(text)
-        }
-    }
-    
+
     matchDataEvent(dataEvent) {
         let hash;
-        if(Array.isArray(dataEvent.data)){
+        if (Array.isArray(dataEvent.data)) {
             hash = makeHash(dataEvent.data.join("")).toString()
-            this.bindDataEvent(hash,dataEvent)
-        }else{
-            hash = makeHash(Object.keys(dataEvent).join("")).toString()
-            this.bindDataEvent(hash,dataEvent)
+            this.bindDataEvent(hash, dataEvent)
+        } else {
+            hash = makeHash(Object.keys(dataEvent.data).join("")).toString()
+            this.bindDataEvent(hash, dataEvent)
         }
         return hash + "-" + (this.dataEvents[hash].length - 1).toString()
     }
 
-    bindDataEvent(hash,dataEvent){
+    bindDataEvent(hash, dataEvent) {
         if (this.dataEvents.hasOwnProperty(hash)) {
             this.dataEvents[hash].push(dataEvent)
         } else {

@@ -32,9 +32,7 @@ class Schedule extends Component {
         listjobs(this.state.data.project).then(({ running, pending, finished }) => {
             let jobs = [].concat(running).concat(pending).concat(finished)
             this.setState({ jobs: jobs })
-            if (jobs.length === 1) {
-                this.updateData("jobid", jobs[0])
-            }
+            
         })
     }
     updateData(key, value) {
@@ -59,7 +57,7 @@ class Schedule extends Component {
                 <Base />
                 <div className="container">
                     <Form>
-                        <h2>Schedule new crawl in {this.state.data.project}</h2>
+                        <h5>Schedule {this.state.data.project}</h5>
                         <Label >spider:</Label>
                         <InputGroup>
                             <Input type="select" onChange={(e) => { this.updateData("spider", e.target.value) }} >
@@ -80,7 +78,10 @@ class Schedule extends Component {
                         </InputGroup>
                         <Label >job:</Label>
                         <InputGroup>
-                            <Input type="select" onChange={(e) => { this.updateData("jobid", e.target.value) }} >
+                            <Input type="select" onChange={(e) => { 
+                                if (e.target.value===""){e.target.value = null}
+                                this.updateData("jobid", e.target.value) }} >
+                                    <option ></option>
                                 {this.state.jobs.map(
                                     (job) => { return (<option key={job.id} value={job.id}>{job.id}</option>) }
                                 )}
@@ -133,7 +134,7 @@ class Schedule extends Component {
                                     if (res.status=="ok"){
                                         toastr["success"](res.message)
                                     }
-                                    window.location = "/"+this.state.data.project+"/jobs"
+                                    window.location = "/ui/"+this.state.data.project+"/jobs"
                                 })
                             }} color="primary" >Create Job</Button>
                         </Row>

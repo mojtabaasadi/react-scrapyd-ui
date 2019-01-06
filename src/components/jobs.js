@@ -57,7 +57,6 @@ class Jobs extends Component {
                                                 <Col xs="3" style={col_style}>{job.detail?job.detail['item_scraped_count']+" items":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['finish_reasont']:""}
-                                                <a href={'/'+this.state.project+"/"+job.spider+"/"+job.id}>logs</a>
                                                 </Col>
                                             </Row>
                                         })
@@ -82,7 +81,7 @@ class Jobs extends Component {
                                                 <Col xs="3" style={col_style}>{job.detail?job.detail['item_scraped_count']+" items":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['finish_reasont']:""}
-                                                <a href={'/'+this.state.project+"/"+job.spider+"/"+job.id}>logs</a>
+                                                <a href={'/ui/'+this.state.project+"/"+job.spider+"/"+job.id}>logs</a>
                                                 </Col>
                                             </Row>
                                         })
@@ -109,7 +108,7 @@ class Jobs extends Component {
                                                 <Col onClick={onClick} xs="3" style={col_style}>{job.detail&&'item_scraped_count' in job.detail?job.detail['item_scraped_count']+" items":""}</Col>
                                                 <Col onClick={onClick} xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
                                                 <Col  xs="2" style={col_style}>{job.detail?job.detail['finish_reason']:""}
-                                                <a href={'/'+this.state.project+"/"+job.spider+"/"+job.id+"?finished=true"}>&nbsp;logs</a>
+                                                <a href={'/ui/' + this.state.project + "/" + job.spider + "/" +job.id}>&nbsp;logs</a>
                                                 </Col>
                                                 <Col xs="12" className={"job_status"} >
                                                 {job.showDetail?job.details.map((key)=>{
@@ -117,11 +116,11 @@ class Jobs extends Component {
                                                         {logStatuses(key)}:<span style={{float:"right"}}>
                                                         {job.detail[key]}</span>
                                                         </p>
-                                                }):<a href={"/"+this.state.project+"/schedule"}></a>   }
+                                                }):''}
                                                 </Col>
                                             </Row>
                                         })
-                                        : ''}
+                                        : <a href={"/ui"+this.state.project+"/schedule"}>schedule</a>   }
                             </CardBody>
                         </Card>
 

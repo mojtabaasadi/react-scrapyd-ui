@@ -13,10 +13,11 @@ class App extends Component {
     	return (<Router>
 			<div>
 				<Route exact  path="/" component={Home}/>
-				<Route path="/addversion" component={AddVersion}/>
-				<Route path="/schedule/:project" component={Schedule}/>
-				<Route path="/:project/jobs" component={Jobs}/>
-				<Route path="/:project/:spider/:job" component={Job}/>
+				<Route exact  path="/ui" component={Home}/>
+				<Route path="/ui/addversion" component={AddVersion}/>
+				<Route path="/ui/schedule/:project" component={Schedule}/>
+				<Route path="/ui/:project/jobs" component={Jobs}/>
+				<Route path="/ui/:project/:spider/:job" component={Job}/>
 			</div>
 			</Router>)
   	}
