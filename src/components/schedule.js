@@ -9,6 +9,7 @@ class Schedule extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            loading:false,
             data: {
                 project: props.match.params.project,
                 spider: null,
@@ -130,9 +131,10 @@ class Schedule extends Component {
                         })}
                         <Row form>
                             <Button onClick={()=>{
+                                this.setState({loading:true})
                                 schedule(this.state.data).then((res)=>{
                                     if (res.status=="ok"){
-                                        toastr["success"](res.message)
+                                        toastr["success"]('job created')
                                     }
                                     window.location = "/ui/"+this.state.data.project+"/jobs"
                                 })
@@ -140,6 +142,7 @@ class Schedule extends Component {
                         </Row>
                     </Form>
                 </div>
+                <div className="loading" style={{display:this.state.loading?"block":"none"}}></div>
             </div>
         )
     }

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import deamonStatus from "../services/api"
+import {HOST} from "../services/settings";
 import {
 	Collapse,
 	Navbar,
 	NavbarToggler,
 	NavbarBrand,
-	Nav, InputGroup, Input,
+	Nav, 
 	NavItem,
 	NavLink,
 	UncontrolledDropdown,
@@ -45,7 +45,7 @@ export default class NavBar extends React.Component {
 					<div className="container">
 						<NavbarBrand href="/">
 							<img src="https://scrapy.org/favicons/apple-touch-icon-180x180.png" height="30px" alt="" />
-							&nbsp;Scrapyd Ui</NavbarBrand>
+							&nbsp;Scrapyd</NavbarBrand>
 						<NavbarToggler onClick={this.toggle} />
 						<Collapse isOpen={this.state.isOpen} navbar>
 							<Nav className="ml-auto" navbar>
@@ -55,11 +55,11 @@ export default class NavBar extends React.Component {
 								<UncontrolledDropdown nav inNavbar>
 									<DropdownToggle nav caret>
 										Settings
-                </DropdownToggle>
+					                </DropdownToggle>
 									<DropdownMenu right>
-										<DropdownItem onClick={() => this.toggleHostmodal()}>
+									{HOST===""?'':<DropdownItem onClick={() => this.toggleHostmodal()}>
 											change host
-                  </DropdownItem>
+                  						</DropdownItem>}
 
 									</DropdownMenu>
 								</UncontrolledDropdown>

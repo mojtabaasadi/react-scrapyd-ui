@@ -9,9 +9,10 @@ import { listprojects ,pickprotocol } from "../services/api"
 class AddVerion extends Component {
     constructor(props) {
         super(props)
-        this.state = { is_valid: false, data: { project: "", version: "", egg: null }, files: [] }
+        this.state = {loading:false, is_valid: false, data: { project: "", version: "", egg: null }, files: [] }
         this.errors = { egg: "" }
         this.pond = {}
+        
         listprojects().then(({ projects }) => {
             this.projects = projects
         })
@@ -54,7 +55,7 @@ class AddVerion extends Component {
         };
 
         request.send(formData);
-        
+        this.setState({loading:true})
         // Should expose an abort method so the request can be cancelled
         return {
             abort: () => {
@@ -120,6 +121,7 @@ class AddVerion extends Component {
 
                     </FilePond>
                 </div>
+                <div className="loading" style={{display:this.state.loading?"block":"none"}}></div>
             </div>
         )
     }

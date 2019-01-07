@@ -111,7 +111,6 @@ export const jobDetail = (project,spider,job) => {
             })
             resolve(log.dataEvents[keys[keys.length-1]][0].data)
         }).catch((err) => {
-            console.log(err)
             toastr['error']('jobDetail fail')
             return reject(err)
         })
@@ -119,7 +118,6 @@ export const jobDetail = (project,spider,job) => {
 }
 
 export const schedule = (form) => {
-    console.log(form)
     let body = new FormData()
     for (let key in form) {
         if (form[key] !== null && typeof(form[key])) {
@@ -141,7 +139,19 @@ export const schedule = (form) => {
         })
     })
 }
-
+export const cancel = (project,job)=>{
+    let data = new FormData()
+    data.append("project",project)
+    data.append("job",job)
+    return new Promise((resolve,reject)=>{
+        fetch(pickprotocol(HOST+"/cancel.json"),{
+            method:"POST",
+            body:data
+        }).then((res)=>{return res.json()})
+        .then((data)=>{resolve(data)})
+        .catch((err)=>{reject(err)})
+    })
+}
 export const deleteVersion = (project, version) => {
     let body = new FormData()
     body.append("project", project)

@@ -66,7 +66,7 @@ class Home extends Component {
                         <ListGroupItem disabled > pending :{this.righteee(this.state.status.pending)}</ListGroupItem>
                     </ListGroup>
 
-                    <ListGroup style={{ marginTop: "10px" }}>
+                    <ListGroup color="defualt" style={{ marginTop: "10px" }}>
                         <ListGroupItem active >projects{this.righteee(
                             <Link to="/ui/addversion" style={{color:"white",fontSize:"20px",fontWeight:"bold"}}>+</Link>
                             )}</ListGroupItem>

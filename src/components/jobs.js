@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Base from "./base"
-import { listjobs, jobDetail } from "../services/api"
-import {  Row, Col, Card, CardBody } from 'reactstrap';
+import { listjobs, jobDetail,cancel } from "../services/api"
+import { Row, Col, Card, CardBody } from 'reactstrap';
 import {logStatuses} from "../services/helpers"
 
 let col_style ={
@@ -30,7 +30,20 @@ class Jobs extends Component {
             this.setState({ jobs: jobs })
         })
     }
-
+    cancelJob(status,job){
+        this.setState({loading:false})
+        cancel(this.state.project,job).then((res)=>{
+            if(res.status==="ok"){
+                this.setState({loading:false})
+                let newjobs =  this.state.jobs
+                newjobs[status] = newjobs[status].filter((a)=>{return a.id !== job})
+                this.setState({jobs:newjobs})
+            }
+        }).catch((err)=>{
+            console.log(err)
+            this.setState({loading:false})
+        })
+    }
 
     render() {
 
@@ -56,11 +69,14 @@ class Jobs extends Component {
                                                 <Col xs="2" style={col_style}>{job.spider}</Col>
                                                 <Col xs="3" style={col_style}>{job.detail?job.detail['item_scraped_count']+" items":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
-                                                <Col xs="2" style={col_style}>{job.detail?job.detail['finish_reasont']:""}
+                                                <Col xs="2" style={col_style}>
+                                                <a onClick={()=>{
+                                                    this.cancelJob("pending",job.id)
+                                                }}>cancel</a>
                                                 </Col>
                                             </Row>
                                         })
-                                        : 'nothing pending'}
+                                        : <span> nothing pending <a href={"/ui/schedule/"+this.state.project}>schedule</a> </span>}
                             </CardBody>
                         </Card>
                     <h6>Running:</h6>
@@ -80,7 +96,10 @@ class Jobs extends Component {
                                                 <Col xs="2" style={col_style}>{job.spider}</Col>
                                                 <Col xs="3" style={col_style}>{job.detail?job.detail['item_scraped_count']+" items":""}</Col>
                                                 <Col xs="2" style={col_style}>{job.detail?job.detail['downloader/request_count']+" requests":""}</Col>
-                                                <Col xs="2" style={col_style}>{job.detail?job.detail['finish_reasont']:""}
+                                                <Col xs="2" style={col_style}>
+                                                <a onClick={()=>{
+                                                    this.cancelJob("running",job.id)
+                                                }}>cancel</a>&nbsp;
                                                 <a href={'/ui/'+this.state.project+"/"+job.spider+"/"+job.id}>logs</a>
                                                 </Col>
                                             </Row>
@@ -123,6 +142,7 @@ class Jobs extends Component {
                                         : <a href={"/ui"+this.state.project+"/schedule"}>schedule</a>   }
                             </CardBody>
                         </Card>
+                        <div className="loading" style={{display:this.state.loading?"block":"none"}}></div>
 
                 </div >
             </div >

@@ -3,7 +3,7 @@ export function logStatuses(key) {
     let obj = {
         status:"Status",
         "downloader/request_bytes":"Request Bytes",
-        "downloader/request_count":"Request Count",
+        "downloader/request_count":"Requests Count",
         "downloader/request_method_count/GET":"Get Requests ",
         "downloader/request_method_count/POST":"Post Request",
         "downloader/response_bytes":"Response Bytes",
