@@ -5,7 +5,8 @@ import AddVersion from "./components/addversion"
 import Schedule from "./components/schedule"
 import Jobs from "./components/jobs"
 import Job from "./components/job"
-import "./App.css"
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 class App extends Component {
 	
