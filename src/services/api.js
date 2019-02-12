@@ -29,6 +29,8 @@ export function mergeJobs(running, pending, finished) {
 }
 function handelMessage(data) {
     if (data.status && data.status.search("error") > -1) {
+        toastr.options = {
+            timeOut:6000}
         toastr["error"](data.message)
     }
 }
@@ -106,10 +108,7 @@ export const jobDetail = (project,spider,job) => {
             return res.text()
         }).then(data => {
             let log = new Logger(data)
-            let keys = Object.keys(log.dataEvents).filter((key)=>{
-                return log.dataEvents[key].length === 1
-            })
-            resolve(log.dataEvents[keys[keys.length-1]][0].data)
+            resolve(log.statusLog.data)
         }).catch((err) => {
             toastr['error']('jobDetail fail')
             return reject(err)
@@ -144,7 +143,7 @@ export const cancel = (project,job)=>{
     data.append("project",project)
     data.append("job",job)
     return new Promise((resolve,reject)=>{
-        fetch(pickprotocol(HOST+"/cancel.json"),{
+        fetch( pickprotocol(HOST)+"/cancel.json",{
             method:"POST",
             body:data
         }).then((res)=>{return res.json()})

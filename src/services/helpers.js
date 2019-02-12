@@ -22,7 +22,9 @@ export function logStatuses(key) {
         "scheduler/dequeued/memory":"Dequeued Memory",
         "scheduler/enqueued":"Scheduler Enqueued",
         "scheduler/enqueued/memory":"Scheduler Enqueued Memory",
-        "start_time":"Start Time"
+        "start_time":"Start Time",
+        "memusage/max" :"Memory Usage(peak)",
+        "memusage/startup" :"Memory Usage(startup)",
     }
     return obj[key] !== undefined ? obj[key] : key
 }

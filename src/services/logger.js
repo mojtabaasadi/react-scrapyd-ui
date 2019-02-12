@@ -60,7 +60,9 @@ export class DataEvent {
         this.data = JSON.parse(this._raw)
 
     }
-
+    get isStatus(){
+        return "finish_time" in this.data
+    }
 }
 
 export default class Logger {
@@ -130,6 +132,22 @@ export default class Logger {
             this.dataEvents[hash].push(dataEvent)
         } else {
             this.dataEvents[hash] = [dataEvent]
+        }
+    }
+    get allDataEvents(){
+        let res = []
+        Object.keys(this.dataEvents).forEach((key)=>{
+            res = res.concat(this.dataEvents[key])
+        })
+        return res
+    }
+    get statusLog(){
+        if(this.isFinished){
+            return this.allDataEvents.filter((de)=>{
+                return de.isStatus
+            })[0]
+        }else{
+            return null
         }
     }
 }

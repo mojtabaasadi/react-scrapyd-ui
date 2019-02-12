@@ -23,6 +23,7 @@ class Schedule extends Component {
             if (spiders.length === 1) {
                 this.updateData("spider", spiders[0])
             }
+            this.updateData("spider", spiders[0])
         })
         listversions(this.state.data.project).then(({ versions }) => {
             this.setState({ versions: versions })

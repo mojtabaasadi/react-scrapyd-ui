@@ -72,11 +72,11 @@ class Jobs extends Component {
                                                 <Col xs="2" style={col_style}>
                                                 <a onClick={()=>{
                                                     this.cancelJob("pending",job.id)
-                                                }}>cancel</a>
+                                                }} href="" >cancel</a>
                                                 </Col>
                                             </Row>
                                         })
-                                        : <span> nothing pending <a href={"/ui/schedule/"+this.state.project}>schedule</a> </span>}
+                                        : <span className="centered"> nothing pending <a href={"/ui/schedule/"+this.state.project}>schedule</a> </span>}
                             </CardBody>
                         </Card>
                     <h6>Running:</h6>
@@ -117,7 +117,7 @@ class Jobs extends Component {
                                     <Col xs="2"></Col>
                                     <Col xs="2"></Col>
                                 </Row>
-                                {this.state.jobs.finished && this.state.jobs.finished.length ? this.state.jobs.finished.map((job) => {
+                                {this.state.jobs.finished && this.state.jobs.finished.length ? this.state.jobs.finished.map((job,ii) => {
                                     let onClick = ()=>{
                                         job.showDetail=job.detail &&!job.showDetail
                                     this.setState({jobs:this.state.jobs})}
@@ -129,7 +129,8 @@ class Jobs extends Component {
                                                 <Col  xs="2" style={col_style}>{job.detail?job.detail['finish_reason']:""}
                                                 <a href={'/ui/' + this.state.project + "/" + job.spider + "/" +job.id}>&nbsp;logs</a>
                                                 </Col>
-                                                <Col xs="12" className={"job_status"} >
+                                                
+                                                <Col xs="12" className={"job_status"+(job.showDetail?" open":"")}  >
                                                 {job.showDetail?job.details.map((key)=>{
                                                     return <p key={key} style={{fontSize:"x-small",margin:0}}>
                                                         {logStatuses(key)}:<span style={{float:"right"}}>

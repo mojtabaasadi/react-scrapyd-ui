@@ -81,7 +81,7 @@ class Home extends Component {
                                             {project.spiders?project.spiders.length+"spiders":''} 
                                         </div>
                                         <div className="col-sm-4">
-                                            {project.versions?"@" + project.versions[0]:""}
+                                            {project.versions?"@" + project.versions[project.versions.length-1]:""}
                                          <a href={'/ui/schedule/'+project.name}>
                                         <Button color="primary" size="xs" style={{float:"right",padding: '1px 6px',fontWeight:"bold",margin:5}}>
                                           @</Button></a>

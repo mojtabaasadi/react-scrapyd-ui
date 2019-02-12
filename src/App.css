@@ -78,12 +78,25 @@
 	margin: 0.2rem 0 !important;
 }
 
+.centered{
+	margin: 0 auto;
+	text-align: center;
+}
+
+.card-body{
+	font-size: 0.7rem!important;
+}
+
 .job_status p,.job_status *{
 	color: whitesmoke;
 	margin:0;
 }
+
 .clickable{
 	cursor: pointer;
+}
+.row:last-child .job_status:not(.open){
+	display: none!important;
 }
 .job_status{
 	background: rgb(31, 51, 19);
@@ -128,4 +141,7 @@
 }
 .card-body {
     padding: .25rem;
+}
+.card-body{
+	overflow: hidden;
 }
